@@ -2,7 +2,13 @@ const fs = require('fs');
 const express = require('express');
 
 const app = express();
+
 app.use(express.json())
+app.use((req, res, next) => {
+  req.requested_at = new Date().toISOString();
+
+  next();
+})
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
 
@@ -13,6 +19,8 @@ const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simpl
  */
 
 const getTours = (req, res) => {
+  console.log(req.requested_at);
+
   if (!req.params.id) {
     return res.status(200)
               .json({
