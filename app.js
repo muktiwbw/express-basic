@@ -1,14 +1,24 @@
 const fs = require('fs');
 const express = require('express');
+const morgan = require('morgan');
 
 const app = express();
 
-app.use(express.json())
+// Stream function to write error logs
+const writeErrorLogs = fs.createWriteStream(`${__dirname}/logs/errorlogs.log`, {flags: 'a'});
+
+// Middleware to only write logs if response status is 400 or above
+app.use(morgan('combined', {
+  skip: (req, res) => {return res.statusCode < 400},
+  stream: writeErrorLogs
+}));
+
+app.use(express.json());
 app.use((req, res, next) => {
   req.requested_at = new Date().toISOString();
 
   next();
-})
+});
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
 
