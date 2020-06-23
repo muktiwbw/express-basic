@@ -4,7 +4,7 @@
   "description": "Express basic crash course",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon init.js"
   },
   "author": "Mukti Wibowo",
   "license": "ISC",
