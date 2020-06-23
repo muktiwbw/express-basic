@@ -13,18 +13,42 @@ const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simpl
  * ================================================================================
  */
 
-// Get all tours
-app.get('/api/v1/tours', (req, res) => {
-  res.status(200)
-  .json({
-    app: 'Natours',
-    version: '1.0.0',
-    status: 'success',
-    result: tours.length,
-    data: {
-      tours: tours
+// Get all tours / specific tours
+app.get('/api/v1/tours/:id?', (req, res) => {
+  if (!req.params.id) {
+    return res.status(200)
+              .json({
+                app: 'Natours',
+                version: '1.0.0',
+                status: 'success',
+                result: tours.length,
+                data: {
+                  tours: tours
+                }
+              });
+  } else {
+    const tour = tours.find(el => el.id === parseInt(req.params.id));
+
+    if (!tour) {
+      return res.status(404)
+              .json({
+                app: 'Natours',
+                version: '1.0.0',
+                status: 'not-found',
+                message: 'Data not found.'
+              });
     }
-  });
+
+    return res.status(200)
+              .json({
+                app: 'Natours',
+                version: '1.0.0',
+                status: 'success',
+                data: {
+                  tour: tour
+                }
+              });
+  }  
 });
 
 // Create a tour
