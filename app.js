@@ -28,6 +28,7 @@ const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simpl
  * ================================================================================
  */
 
+// Tours
 const getTours = (req, res) => {
   console.log(req.requested_at);
 
@@ -131,6 +132,32 @@ const deleteTours = (req, res) => {
             });
 };
 
+// Users
+const getUsers = (req, res) => {
+  return res.status(500)
+            . json({
+              message: 'This route is not yet available.'
+            });
+};
+const createUsers = (req, res) => {
+  return res.status(500)
+            . json({
+              message: 'This route is not yet available.'
+            });
+};
+const patchUsers = (req, res) => {
+  return res.status(500)
+            . json({
+              message: 'This route is not yet available.'
+            });
+};
+const deleteUsers = (req, res) => {
+  return res.status(500)
+            . json({
+              message: 'This route is not yet available.'
+            });
+};
+
 /**
  * ================================================================================
  * END ROUTE HANDLERS
@@ -144,13 +171,27 @@ const deleteTours = (req, res) => {
  */
 const routePrefix = '/api/v1';
 
-app.route(`${routePrefix}/tours`)
+const toursRouter = express.Router();
+const usersRouter = express.Router();
+
+toursRouter.route('/')
     .post(createTours);
 
-app.route(`${routePrefix}/tours/:id?`)
+toursRouter.route('/:id?')
     .get(getTours)
     .patch(patchTours)
     .delete(deleteTours);
+
+usersRouter.route('/')
+    .post(createUsers);
+
+usersRouter.route('/:id?')
+    .get(getUsers)
+    .patch(patchUsers)
+    .delete(deleteUsers);
+
+app.use(`${routePrefix}/tours`, toursRouter);
+app.use(`${routePrefix}/users`, usersRouter);
 
 /**
  * ================================================================================
