@@ -9,12 +9,11 @@ const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simpl
 
 /**
  * ================================================================================
- * ROUTES
+ * ROUTE HANDLERS
  * ================================================================================
  */
 
-// Get all tours / specific tours
-app.get('/api/v1/tours/:id?', (req, res) => {
+const getTours = (req, res) => {
   if (!req.params.id) {
     return res.status(200)
               .json({
@@ -49,10 +48,8 @@ app.get('/api/v1/tours/:id?', (req, res) => {
                 }
               });
   }  
-});
-
-// Create a tour
-app.post('/api/v1/tours', (req, res) => {
+};
+const createTours = (req, res) => {
   const newTour = Object.assign({id: tours.length}, req.body);
   
   tours.push(newTour);
@@ -68,10 +65,8 @@ app.post('/api/v1/tours', (req, res) => {
           }
         });
   });
-});
-
-// Patch a tour data
-app.patch('/api/v1/tours/:id', (req, res) => {
+};
+const patchTours = (req, res) => {
   const tour = tours.find(el => el.id === parseInt(req.params.id));
 
   if (!tour) {
@@ -94,10 +89,8 @@ app.patch('/api/v1/tours/:id', (req, res) => {
               status: 'patched',
               tour: tour
             });
-});
-
-// Delete a tour data
-app.delete('/api/v1/tours/:id', (req, res) => {
+};
+const deleteTours = (req, res) => {
   const tour = tours.find(el => el.id === parseInt(req.params.id));
 
   if (!tour) {
@@ -119,7 +112,28 @@ app.delete('/api/v1/tours/:id', (req, res) => {
               status: 'deleted',
               tour: tour
             });
-});
+};
+
+/**
+ * ================================================================================
+ * END ROUTE HANDLERS
+ * ================================================================================
+ */
+
+/**
+ * ================================================================================
+ * ROUTES
+ * ================================================================================
+ */
+const routePrefix = '/api/v1';
+
+app.route(`${routePrefix}/tours`)
+    .post(createTours);
+
+app.route(`${routePrefix}/tours/:id?`)
+    .get(getTours)
+    .patch(patchTours)
+    .delete(deleteTours);
 
 /**
  * ================================================================================
