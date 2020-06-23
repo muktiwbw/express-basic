@@ -2,3 +2,5 @@ node_modules
 package-lock.json
 app/logs
 app.starter.js
+.env
+prod.env
