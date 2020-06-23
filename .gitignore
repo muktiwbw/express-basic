@@ -1,5 +1,5 @@
 node_modules
 package-lock.json
-app/logs/*
+#app/logs/*
 .env
 prod.env
