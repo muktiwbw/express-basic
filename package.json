@@ -4,11 +4,13 @@
   "description": "Express basic crash course",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon init.js"
+    "start": "nodemon init.js",
+    "prod": "set NODE_ENV=production&&nodemon init.js"
   },
   "author": "Mukti Wibowo",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "morgan": "^1.10.0"
   },

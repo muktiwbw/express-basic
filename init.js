@@ -1,6 +1,7 @@
-const app = require('./app/app')
+const env = require('./app/config/env');
+const app = require('./app/app');
 
-const port = 3000;
-app.listen(port, () => {
-  console.log( `Listening to port ${port}...`);
+app.listen(env.serverPort, () => {
+  console.log( `Running on ${env.nodeEnv} environment...`);
+  console.log( `Listening to port ${env.serverPort}...`);
 });
