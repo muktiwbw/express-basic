@@ -1,5 +1,6 @@
 const fs = require('fs');
 const express = require('express');
+const mongoose = require('./config/database');
 const morgan = require('morgan');
 const tourRouter = require('./routes/tourRoute');
 const userRouter = require('./routes/userRoute');
