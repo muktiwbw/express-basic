@@ -30,7 +30,7 @@ const tourSchema = new mongoose.Schema({
 
 /**
  * MODEL
- * Create model based on schemas...
+ * Create and exports model based on schemas...
  */
 
 exports.Tour = mongoose.model('Tour', tourSchema, 'tours');
