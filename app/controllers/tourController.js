@@ -55,7 +55,7 @@ exports.createTours = async (req, res) => {
 
 exports.patchTours = async (req, res) => {
   try {
-    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body);
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     
     return res.status(201)
               .json({
