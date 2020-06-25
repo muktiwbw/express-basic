@@ -34,27 +34,3 @@ const tourSchema = new mongoose.Schema({
  */
 
 exports.Tour = mongoose.model('Tour', tourSchema, 'tours');
-
-// const Tour = mongoose.model('Tour', tourSchema, 'tours');
-
-/**
- * To create documents, use this:
- * const tour = new Tour({
-    name: 'Journey to Drangelic',
-    price: 1000
-  });
-
-  tour.save().then(doc => console.log(doc))
- */
-
-/**
- * ...or this:
- * const tour = Tour
-              .create({
-                name: 'Liberio Massacre',
-                rating: 5,
-                price: 2000
-              })
-              .then(doc => console.log(doc))
-              .catch(err => console.log(err));
- */
