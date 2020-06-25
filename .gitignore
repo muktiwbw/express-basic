@@ -1,5 +1,11 @@
+# Node modules
 node_modules
 package-lock.json
+
+# Log files
 app/logs/*.log
+!app/logs/test.log
+
+# Environment vars
 .env
 prod.env
