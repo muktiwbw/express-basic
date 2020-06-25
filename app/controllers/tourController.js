@@ -16,14 +16,6 @@ exports.getTours = async (req, res) => {
     } else {
       const tour = await Tour.findById(req.params.id);
 
-      if (!tour) {
-        return res.status(404)
-                  .json({
-                    status: 'not-found',
-                    message: 'Data not found'
-                  });
-      }
-
       return res.status(200)
                 .json({
                   status: 'success',
@@ -61,14 +53,44 @@ exports.createTours = async (req, res) => {
   }
 };
 
-exports.patchTours = (req, res) => {
-  res.status(200).json({
-    message: 'Okay'
-  });
+exports.patchTours = async (req, res) => {
+  try {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body);
+    
+    return res.status(201)
+              .json({
+                status: 'updated',
+                data: {
+                  tour: tour
+                }
+              });
+  } catch (err) {
+    return res.status(500)
+              .json({
+                status: 'fail',
+                message: err
+              });
+  }
+
+
 };
 
-exports.deleteTours = (req, res) => {
-  res.status(200).json({
-    message: 'Okay'
-  });
+exports.deleteTours = async (req, res) => {
+  try {
+    const tour = await Tour.findByIdAndDelete(req.params.id)
+
+    return res.status(204)
+              .json({
+                status: 'deleted',
+                data: {
+                  tour: tour
+                }
+              });
+  } catch (err) {
+    return res.status(500)
+              .json({
+                status: 'fail',
+                message: err
+              });
+  }
 };
