@@ -14,18 +14,74 @@ mongoose.connect(env.dbUri, {
  */
 
 const tourSchema = new mongoose.Schema({
+  /**
+   * Fields required
+   * - name (string, required, unique, trim)
+   * - duration (number, required)
+   * - maxGroupSize (number, required)
+   * - difficulty (string, required) --> this one should be enum
+   * - ratingAverage (number, default 0)
+   * - ratingQuantity (number, default 0)
+   * - price (number, required)
+   * - priceDiscount (number)
+   * - summary (string, trim) --> on the overview page, should be required but it doesn't matter
+   * - description (string, trim)
+   * - imageCover (string, required)
+   * - images (string-array),
+   * - createdAt (date, default now) --> try timestamp
+   * - startDates (date-array)
+   */
   name: {
     type: String,
-    required: [true, 'A tour must have a name!'],
-    unique: true
+    required: [true, 'Missing name field'],
+    unique: [true, 'Conflicting name with existed data'],
+    trim: true
   },
-  rating: {
+  duration: {
     type: Number,
-    default: 4.5
+    required: [true, 'Missing duration field']
+  },
+  difficulty: {
+    type: String,
+    required: [true, 'Missing difficulty field'],
+    enum: ['easy', 'medium', 'difficult']
+  },
+  ratingAverage: {
+    type: Number,
+    default: 0
+  },
+  ratingQuantity: {
+    type: Number,
+    default: 0
   },
   price: {
     type: Number,
-    required: [true, 'A tour must have a price!']
+    required: [true, 'Missing price field']
+  },
+  priceDiscount: {
+    type: Number
+  },
+  summary: {
+    type: String,
+    trim: true
+  },
+  description: {
+    type: String,
+    trim: true
+  },
+  imageCover: {
+    type: String,
+    required: [true, 'Missing imageCover field']
+  },
+  images: {
+    type: [String]
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now()
+  },
+  startDates: {
+    type: [Date]
   }
 });
 
