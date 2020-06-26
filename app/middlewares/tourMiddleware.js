@@ -1,1 +1,1 @@
-const Tour = require('./../model');
+const Tour = require('./../database/model');
