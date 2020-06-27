@@ -14,23 +14,6 @@ mongoose.connect(env.dbUri, {
  */
 
 const tourSchema = new mongoose.Schema({
-  /**
-   * Fields required
-   * - name (string, required, unique, trim)
-   * - duration (number, required)
-   * - maxGroupSize (number, required)
-   * - difficulty (string, required) --> this one should be enum
-   * - ratingAverage (number, default 0)
-   * - ratingQuantity (number, default 0)
-   * - price (number, required)
-   * - priceDiscount (number)
-   * - summary (string, trim) --> on the overview page, should be required but it doesn't matter
-   * - description (string, trim)
-   * - imageCover (string, required)
-   * - images (string-array),
-   * - createdAt (date, default now) --> try timestamp
-   * - startDates (date-array)
-   */
   name: {
     type: String,
     required: [true, 'Missing name field'],
