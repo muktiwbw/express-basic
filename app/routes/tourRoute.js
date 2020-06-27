@@ -1,9 +1,7 @@
 const express = require('express');
-const tourController = require('./../controllers/tourController');
-
-const tourMiddleware = require('./../middlewares/tourMiddleware');
-const _commonMiddleware = require('../middlewares/_commonMiddleware');
-
+const TourController = require('./../controllers/tourController');
+const TourMiddleware = require('./../middlewares/tourMiddleware');
+const CommonMiddleware = require('./../middlewares/__commonMiddleware');
 const router = express.Router();
 
 /** =================================================================
@@ -15,9 +13,9 @@ const router = express.Router();
 
 router.route('/top-three-tours-by-rating')
     .get(
-        tourMiddleware.topThreeToursByRating,
-        _commonMiddleware.querySeparator,
-        tourController.getTours
+        TourMiddleware.topThreeToursByRating,
+        CommonMiddleware.querySeparator,
+        TourController.getTours
     );
 
 /** 
@@ -27,11 +25,11 @@ router.route('/top-three-tours-by-rating')
 */
 
 router.route('/')
-    .post(tourController.createTours);
+    .post(TourController.createTours);
 
 router.route('/:id?')
-    .get(_commonMiddleware.querySeparator, tourController.getTours)
-    .patch(tourController.patchTours)
-    .delete(tourController.deleteTours);
+    .get(CommonMiddleware.querySeparator, TourController.getTours)
+    .patch(TourController.patchTours)
+    .delete(TourController.deleteTours);
 
 module.exports = router;
