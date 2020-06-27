@@ -19,6 +19,9 @@ switch (process.env.NODE_ENV) {
 dotenv.config({path: `${__dirname}/../../${envFileName}`});
 
 switch (process.env.DB_DRIVER) {
+  /**
+   * Add additional database driver here...
+   */
   case 'atlas':
     dbUri = 'mongodb+srv://$DB_USERNAME$:$DB_PASSWORD$@$DB_HOST$/$DB_DATABASE$?retryWrites=true&w=majority'
     dbUri = dbUri
@@ -32,6 +35,6 @@ switch (process.env.DB_DRIVER) {
     break;
 }
 
-exports.nodeEnv = process.env.NODE_ENV || 'development';
-exports.serverPort = process.env.SERVER_PORT || 3000;
+exports.appEnv = process.env.NODE_ENV || 'development';
+exports.appPort = process.env.APP_PORT || 3000;
 exports.dbUri = dbUri;
