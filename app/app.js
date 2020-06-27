@@ -1,31 +1,27 @@
 const express = require('express');
-const tourRouter = require('./routes/tourRoute');
-const userRouter = require('./routes/userRoute');
 
 const logger = require('./utils/logger');
 
-const app = express();
+const tourRouter = require('./routes/tourRoute');
+const userRouter = require('./routes/userRoute');
 
-app.use(express.json());
-app.use(express.static(`${__dirname}/public`));
+class Application {
+  constructor() {
+    this.routePrefix = '/api/v1';
 
-app.use(logger.badResponse);
+    this.app = express();
 
-/**
- * ================================================================================
- * ROUTES
- * ================================================================================
- */
+    /**Express extensions */
+    this.app.use(express.json());
+    this.app.use(express.static(`${__dirname}/public`));
 
-const routePrefix = '/api/v1';
+    /**Logger */
+    this.app.use(logger.badResponse);
 
-app.use(`${routePrefix}/tours`, tourRouter);
-app.use(`${routePrefix}/users`, userRouter);
+    /**Routes */
+    this.app.use(`${this.routePrefix}/tours`, tourRouter);
+    this.app.use(`${this.routePrefix}/users`, userRouter);
+  }
+}
 
-/**
- * ================================================================================
- * END ROUTES
- * ================================================================================
- */
-
-module.exports = app;
+module.exports = Application;
