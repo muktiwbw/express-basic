@@ -2,6 +2,7 @@ const express = require('express');
 const TourController = require('./../controllers/tourController');
 const TourMiddleware = require('./../middlewares/tourMiddleware');
 const CommonMiddleware = require('./../middlewares/__commonMiddleware');
+
 const router = express.Router();
 
 /** =================================================================
