@@ -1,4 +1,6 @@
-const Tour = require('./../models/tourModel');
+const TourClass = require('./../models/tourModel');
+const Tour = new TourClass().model;
+
 const { displayByQueryString } = require('./../utils/query');
 
 exports.getTours = async (req, res) => {
