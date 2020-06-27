@@ -1,9 +1,10 @@
-const {Tour} = require('./../database/model');
+const Tour = require('./../models/tourModel');
+const { findByQueryString } = require('./../utils/query');
 
 exports.getTours = async (req, res) => {
   try {
     if (!req.params.id) {
-      const tours = await Tour.find();
+      const tours = await findByQueryString(Tour, req.filterQuery, req.extraQuery);
 
       return res.status(200)
                 .json({
