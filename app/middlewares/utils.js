@@ -1,6 +1,11 @@
 exports.querySeparator = (req, res, next) => {
+  /** ===========================================================================
+   * Extra query list contains list of querystring outside the main model fields
+   * ============================================================================
+   */
+  const extraQueryList = ['sort', 'fields', 'page', 'perpage'];
+
   if (Object.keys(req.query).length > 0) {
-    const extraQueryList = ['sort', 'page'];
 
     const filterQuery = {...req.query};
     const extraQuery = {};
