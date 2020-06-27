@@ -31,7 +31,7 @@ morgan.format('combined-local-timezone', ':remote-addr - :remote-user [:date[Asi
  * Bad Response Logger
  *  Logs all response with status code >400
  */
-const badResponseStream = fs.createWriteStream(`${__dirname}/../logs/errorlogs.log`, {flags: 'a'});
+const badResponseStream = fs.createWriteStream(`${__dirname}/../logs/badResponse.log`, {flags: 'a'});
 
 exports.badResponse = morgan('combined-local-timezone', {
   skip: (req, res) => {return res.statusCode < 400},
