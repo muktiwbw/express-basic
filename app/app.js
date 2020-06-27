@@ -3,7 +3,7 @@ const express = require('express');
 const logger = require('./utils/logger');
 
 const tourRouter = require('./routes/tourRoute');
-const userRouter = require('./routes/userRoute');
+// const userRouter = require('./routes/userRoute');
 
 class Application {
   constructor() {
@@ -20,7 +20,7 @@ class Application {
 
     /**Routes */
     this.app.use(`${this.routePrefix}/tours`, tourRouter);
-    this.app.use(`${this.routePrefix}/users`, userRouter);
+    // this.app.use(`${this.routePrefix}/users`, userRouter);
   }
 }
 
