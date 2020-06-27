@@ -25,8 +25,8 @@ exports.querySeparator = (req, res, next) => {
     const advanceFilterList = /\b(gte|gt|lte|lt)\b/g;
 
     /**Add dollar sign ($) to advance filter variables */
-    req.filterQuery = JSON.parse(JSON.stringify(filterQuery).replace(advanceFilterList, match => `$${match}`)) || {};
-    req.extraQuery = extraQuery || {};
+    req.filterQuery = JSON.parse(JSON.stringify(filterQuery).replace(advanceFilterList, match => `$${match}`));
+    req.extraQuery = extraQuery;
   }
   
   next();
