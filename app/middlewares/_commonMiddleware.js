@@ -1,6 +1,11 @@
+/**
+ * Separate query string into filter and extra.
+ *  - filter => contains fields that can be used as query filtering
+ *  - extra => contains query modifiers such as sort, paginate, limit, etc.
+ */
 exports.querySeparator = (req, res, next) => {
   /** ===========================================================================
-   * Extra query list contains list of querystring outside the main model fields
+   * Extra query list contains list of query string outside the main model fields
    * ============================================================================
    */
   const extraQueryList = ['sort', 'fields', 'page', 'perpage', 'limit'];
