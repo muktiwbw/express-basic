@@ -1,7 +1,6 @@
 const fs = require('fs');
 
-const TourModel = require('./../models/tourModel');
-const Tour = new TourModel().model;
+const Tour = require('./../models/tourModel');
 
 const seed = async () => {
   const seeds = JSON.parse(fs.readFileSync(`${__dirname}/seeds.json`, {encoding: 'utf-8'}));
