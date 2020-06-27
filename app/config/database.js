@@ -4,7 +4,7 @@ const Environment = require('./env');
 class Database {
   constructor() {
     this.mongoose = mongoose;
-    this.mongoose.connect(new Environment().dbUri, {
+    this.mongoose.connect(Environment.dbUri, {
       useNewUrlParser: true, 
       useUnifiedTopology: true,
       useCreateIndex: true,
