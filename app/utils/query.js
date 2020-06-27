@@ -2,7 +2,10 @@ const breakspace = (args) => {
   return args.split('|').join(' ');
 };
 
-const paginate = async (query, model, page = 1, perpage = 5) => {
+const paginate = async (query, model, perpage = 5, page = 1) => {
+  page = parseInt(page);
+  perpage = parseInt(perpage);
+
   const skip = (page - 1) * perpage;
   const docNum = await model.estimatedDocumentCount();
 
@@ -24,7 +27,7 @@ exports.displayByQueryString = async (model, filterQuery = null, extraQuery = nu
   }
 
   /**Pagination */
-  query = await paginate(query, model, extraQuery.page, extraQuery.perpage);
+  query = await paginate(query, model, extraQuery.perpage || extraQuery.limit, extraQuery.page);
 
   return query;
 }
