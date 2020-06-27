@@ -1,5 +1,7 @@
-const env = require('./app/config/env');
+const Environment = require('./app/config/env');
 const app = require('./app/app');
+
+const env = new Environment;
 
 app.listen(env.appPort, () => {
   console.log( `Running on ${env.appEnv} environment...`);
