@@ -24,4 +24,4 @@ class Application {
   }
 }
 
-module.exports = Application;
+module.exports = new Application().app;

@@ -51,4 +51,4 @@ class Environment {
   }
 }
 
-module.exports = Environment;
+module.exports = new Environment();
