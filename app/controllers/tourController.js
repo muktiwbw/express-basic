@@ -1,5 +1,4 @@
 const Controller = require('../config/controller');
-
 const Tour = require('./../models/tourModel');
 
 class TourController extends Controller{

@@ -2,7 +2,7 @@ const express = require('express');
 
 const logger = require('./utils/logger');
 
-const tourRouter = require('./routes/tourRoute');
+const TourRouter = require('./routes/tourRouter');
 // const userRouter = require('./routes/userRoute');
 
 class Application {
@@ -19,7 +19,7 @@ class Application {
     this.app.use(logger.badResponse);
 
     /**Routes */
-    this.app.use(`${this.routePrefix}/tours`, tourRouter);
+    this.app.use(`${this.routePrefix}/tours`, TourRouter);
     // this.app.use(`${this.routePrefix}/users`, userRouter);
   }
 }
