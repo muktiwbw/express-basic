@@ -2,8 +2,6 @@ const Controller = require('../config/controller');
 
 const Tour = require('./../models/tourModel');
 
-const { displayByQueryString } = require('./../utils/query');
-
 class TourController extends Controller{
   constructor() {
     super();
@@ -12,7 +10,7 @@ class TourController extends Controller{
   async getTours(req, res) {
     try {
       if (!req.params.id) {
-        const tours = await displayByQueryString(Tour, req.filterQuery, req.extraQuery);
+        const tours = await this.displayByQueryString(Tour, req.filterQuery, req.extraQuery);
   
         return res.status(200)
                   .json({
@@ -34,6 +32,7 @@ class TourController extends Controller{
                   });
       }
     } catch (err) {
+      console.log(err);
       return res.status(500)
                 .json({
                   status: 'fail',
