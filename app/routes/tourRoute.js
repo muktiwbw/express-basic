@@ -1,7 +1,7 @@
 const express = require('express');
 const TourController = require('./../controllers/tourController');
 const TourMiddleware = require('./../middlewares/tourMiddleware');
-const CommonMiddleware = require('./../middlewares/__commonMiddleware');
+// const CommonMiddleware = require('../config/middleware');
 
 const router = express.Router();
 
@@ -19,8 +19,8 @@ const router = express.Router();
 
 router.route('/top-three-tours-by-rating')
     .get(
-        TourMiddleware.topThreeToursByRating,
-        CommonMiddleware.querySeparator,
+        TourMiddleware.topThreeToursByRating.bind(TourMiddleware),
+        TourMiddleware.querySeparator.bind(TourMiddleware),
         TourController.getTours.bind(TourController)
     );
 
@@ -34,7 +34,7 @@ router.route('/')
     .post(TourController.createTours.bind(TourController));
 
 router.route('/:id?')
-    .get(CommonMiddleware.querySeparator, TourController.getTours.bind(TourController))
+    .get(TourMiddleware.querySeparator.bind(TourMiddleware), TourController.getTours.bind(TourController))
     .patch(TourController.patchTours.bind(TourController))
     .delete(TourController.deleteTours.bind(TourController));
 
