@@ -13,6 +13,10 @@ class Tour extends Database{
         trim: true
       },
       slug: String,
+      secret: {
+        type: Boolean,
+        default: false
+      },
       duration: {
         type: Number,
         required: [true, 'Missing duration field']
@@ -71,6 +75,18 @@ class Tour extends Database{
      *  fires save() in the background.
      */
     this.schema.pre('save', function(next) { this.slug = slugify(this.name, { lower: true }); next(); });
+
+    /**
+     * Query Middleware
+     * Triggered by: count, /^delete/, /^find/, /^update/, remove
+     */
+    this.schema.pre(/^find/, function(next) { this.find({ secret: false }); next(); });
+
+    /**
+     * Aggregate Middleware
+     * Triggered by: aggregate
+     */
+    this.schema.pre('aggregate', function(next) { this.pipeline().unshift({ $match: { secret: false } }); next(); });
 
     /**
      * Little note:

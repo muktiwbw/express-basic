@@ -2,6 +2,7 @@
   "tour": [
     {
       "name": "The Forest Hiker",
+      "secret": true,
       "duration": 5,
       "maxGroupSize": 25,
       "difficulty": "easy",
