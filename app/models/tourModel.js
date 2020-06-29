@@ -64,6 +64,11 @@ class Tour extends Database{
       toObject: { virtuals: true }
     });
 
+    /**
+     * Model Middleware
+     *  Only triggered with save() method.
+     *  The create() method actually fires save() method.
+     */
     this.schema.pre('save', function(next) { this.slug = slugify(this.name, { lower: true }); next(); });
 
     /**
