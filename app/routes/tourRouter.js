@@ -23,6 +23,9 @@ class TourRouter extends Router {
             TourMiddleware.querySeparator.bind(TourMiddleware),
             TourController.getTours.bind(TourController)
         );
+
+    this.router.route('/stats')
+        .get(TourController.getTourStats.bind(TourController));
     
     /** 
      * 

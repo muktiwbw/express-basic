@@ -30,12 +30,12 @@ class TourController extends Controller{
                     }
                   });
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      
       return res.status(500)
                 .json({
                   status: 'fail',
-                  message: err
+                  message: error
                 });
     }
   }
@@ -51,11 +51,11 @@ class TourController extends Controller{
                     tour: tour
                   }
                 });
-    } catch (err) {
+    } catch (error) {
       return res.status(400)
                 .json({
                   status: 'fail',
-                  message: err
+                  message: error
                 });
     }
   }
@@ -71,11 +71,11 @@ class TourController extends Controller{
                     tour: tour
                   }
                 });
-    } catch (err) {
+    } catch (error) {
       return res.status(500)
                 .json({
                   status: 'fail',
-                  message: err
+                  message: error
                 });
     }  
   }
@@ -91,11 +91,55 @@ class TourController extends Controller{
                     tour: tour
                   }
                 });
-    } catch (err) {
+    } catch (error) {
       return res.status(500)
                 .json({
                   status: 'fail',
-                  message: err
+                  message: error
+                });
+    }
+  }
+
+  async getTourStats(req, res) {
+    try {
+      const agg = [
+        {
+          $match: { ratingAverage: { $gte: 4.7 } }
+        },
+        {
+          $group: {
+            _id: '$ratingAverage',
+            totalTours: { $sum: 1 },
+            totalRatings: { $sum: '$ratingQuantity' },
+            avgRating: { $avg: '$ratingAverage' },
+            minRating: { $min: '$ratingAverage' },
+            maxRating: { $max: '$ratingAverage' },
+            avgPrice: { $avg: '$price' },
+            minPrice: { $min: '$price' },
+            maxPrice: { $max: '$price' }
+          }
+        },
+        { 
+          $sort: { avgRatings: 1 } 
+        }
+      ];
+
+      const tours = await Tour.aggregate(agg);
+
+      return res.status(200)
+                  .json({
+                    status: 'success',
+                    result: tours.length,
+                    data: {
+                      tours: tours
+                    }
+                  });
+    } catch (error) {
+      
+      return res.status(500)
+                .json({
+                  status: 'fail',
+                  message: error
                 });
     }
   }
