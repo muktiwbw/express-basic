@@ -65,9 +65,10 @@ class Tour extends Database{
     });
 
     /**
-     * Model Middleware
-     *  Only triggered with save() method.
-     *  The create() method actually fires save() method.
+     * Document Middleware
+     *  Triggered by: validate, save, remove, updateOne, deleteOne, init
+     *  While the create() method isn't in above list, create actually
+     *  fires save() in the background.
      */
     this.schema.pre('save', function(next) { this.slug = slugify(this.name, { lower: true }); next(); });
 
