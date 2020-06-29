@@ -1,5 +1,6 @@
 const Database = require('../config/database');
 const { default: slugify } = require('slugify');
+const { default: validator } = require('validator');
 
 class Tour extends Database{
   constructor() {
@@ -10,7 +11,13 @@ class Tour extends Database{
         type: String,
         required: [true, 'Missing name field'],
         unique: [true, 'Conflicting name with existed data'],
-        trim: true
+        trim: true,
+        validate: {
+          validator: function(v) {
+            return !validator.contains(v, 'fuck', { ignoreCase: true });
+          },
+          message: 'Name can\'t contain the word fuck'
+        }
       },
       slug: String,
       secret: {
@@ -24,7 +31,10 @@ class Tour extends Database{
       difficulty: {
         type: String,
         required: [true, 'Missing difficulty field'],
-        enum: ['easy', 'medium', 'difficult']
+        enum: {
+          values: ['easy', 'medium', 'difficult'],
+          messages: 'Must be: easy, medium, or difficult'
+        }
       },
       ratingAverage: {
         type: Number,
@@ -39,7 +49,13 @@ class Tour extends Database{
         required: [true, 'Missing price field']
       },
       priceDiscount: {
-        type: Number
+        type: Number,
+        validate: {
+          validator: function(v) {
+            return v <= this.price;
+          },
+          message: 'Discount can\'t be higher than the price'
+        }
       },
       summary: {
         type: String,
