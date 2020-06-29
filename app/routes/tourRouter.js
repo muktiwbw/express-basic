@@ -26,6 +26,9 @@ class TourRouter extends Router {
 
     this.router.route('/stats')
         .get(TourController.getTourStats.bind(TourController));
+
+    this.router.route('/monthly-plans')
+        .get(TourController.getMonthlyPlan.bind(TourController));
     
     /** 
      * 

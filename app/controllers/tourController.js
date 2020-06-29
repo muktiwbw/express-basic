@@ -143,6 +143,77 @@ class TourController extends Controller{
                 });
     }
   }
+
+  async getMonthlyPlan(req, res) {
+    try {
+      const agg = [
+        {
+          $unwind: '$startDates'
+        },
+        {
+          $addFields: {
+            year: { $year: '$startDates' }, 
+            month: {
+              $switch: {
+                branches: [
+                  { case: { $eq: [ { $month: '$startDates' }, 1 ] }, then: 'January' },
+                  { case: { $eq: [ { $month: '$startDates' }, 2 ] }, then: 'Fabruary' },
+                  { case: { $eq: [ { $month: '$startDates' }, 3 ] }, then: 'March' },
+                  { case: { $eq: [ { $month: '$startDates' }, 4 ] }, then: 'April' },
+                  { case: { $eq: [ { $month: '$startDates' }, 5 ] }, then: 'May' },
+                  { case: { $eq: [ { $month: '$startDates' }, 6 ] }, then: 'June' },
+                  { case: { $eq: [ { $month: '$startDates' }, 7 ] }, then: 'July' },
+                  { case: { $eq: [ { $month: '$startDates' }, 8 ] }, then: 'August' },
+                  { case: { $eq: [ { $month: '$startDates' }, 9 ] }, then: 'September' },
+                  { case: { $eq: [ { $month: '$startDates' }, 10 ] }, then: 'October' },
+                  { case: { $eq: [ { $month: '$startDates' }, 11 ] }, then: 'November' },
+                  { case: { $eq: [ { $month: '$startDates' }, 12 ] }, then: 'December' }
+                ],
+                default: 'None'
+              }
+            } 
+          }
+        },
+        {
+          $group: {
+            _id: { 
+              year: '$year',
+              month: '$month'
+            },
+            monthlyPlans: { $sum: 1 },
+            tours: { $push: '$name' }
+          }
+        },
+        {
+          $addFields: { year: '$_id.year', month: '$_id.month' }
+        },
+        {
+          $sort: { '_id.year': 1, '_id.monthIndex': 1 }
+        },
+        {
+          $project: { '_id': 0 }
+        }
+      ];
+
+      const plans = await Tour.aggregate(agg);
+
+      return res.status(200)
+                  .json({
+                    status: 'success',
+                    result: plans.length,
+                    data: {
+                      plans: plans
+                    }
+                  });
+    } catch (error) {
+      console.log(error);
+      return res.status(500)
+                .json({
+                  status: 'fail',
+                  message: error
+                });
+    }
+  }
 }
 
 module.exports = new TourController();
