@@ -30,7 +30,7 @@ class TourMiddleware extends Middleware{
   topThreeToursByRating(req, res, next) {
     req.query.sort = '-ratingAverage|price';
     req.query.fields = 'name|duration|difficulty|ratingAverage|price';
-    req.query.limit = 3;
+    req.query.perpage = 3;
   
     next();
   };
