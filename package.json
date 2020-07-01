@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon init.js",
-    "prod": "set NODE_ENV=production&&nodemon init.js",
+    "prod": "export NODE_ENV=production&&nodemon init.js",
     "db:seed": "node app/database/seeder.js seed",
     "db:scoop": "node app/database/seeder.js scoop"
   },
