@@ -5,7 +5,7 @@ class Controller {
     //
   }
 
-  async displayByQueryString(model, filterQuery = null, extraQuery = null) {    
+  async displayByQueryString(model, filterQuery = null, extraQuery = null) {   
     const queryBuilder = new QueryBuilder(model);
     
     return queryBuilder
@@ -14,6 +14,10 @@ class Controller {
               .select(extraQuery)
               .paginate(extraQuery)
               .get();
+  }
+
+  catchAsync(fn, req, res, next) {
+    fn(req, res, next).catch(next);
   }
 }
 

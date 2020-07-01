@@ -1,16 +1,23 @@
 const Controller = require('../config/controller');
 const Tour = require('./../models/tourModel');
 
+const { AppError } = require('./../utils/errorHandler');
+
 class TourController extends Controller{
   constructor() {
     super();
   }
 
-  async getTours(req, res) {
-    try {
+  /**
+   * * WRAPPING RESOURCE WITH CATCH FUNCTION
+   * * So that it any async rejection can be caught
+   */
+
+  getTours(req, res, next) {
+    const fn = async (req, res, next) => {
       if (!req.params.id) {
         const tours = await this.displayByQueryString(Tour, req.filterQuery, req.extraQuery);
-  
+
         return res.status(200)
                   .json({
                     status: 'success',
@@ -21,7 +28,9 @@ class TourController extends Controller{
                   });
       } else {
         const tour = await Tour.findById(req.params.id);
-  
+
+        if (!tour) { return next(new AppError('Tour doesn\'t exist', 404)); }
+
         return res.status(200)
                   .json({
                     status: 'success',
@@ -30,20 +39,15 @@ class TourController extends Controller{
                     }
                   });
       }
-    } catch (error) {
-      
-      return res.status(500)
-                .json({
-                  status: 'fail',
-                  message: error
-                });
-    }
+    };
+
+    this.catchAsync(fn, req, res, next);
   }
 
-  async createTours(req, res) {
-    try {
+  createTours(req, res, next) {
+    const fn = async (req, res, next) => {
       const tour = await Tour.create(req.body);
-  
+    
       return res.status(201)
                 .json({
                   status: 'created',
@@ -51,19 +55,17 @@ class TourController extends Controller{
                     tour: tour
                   }
                 });
-    } catch (error) {
-      return res.status(400)
-                .json({
-                  status: 'fail',
-                  message: error
-                });
-    }
+    };
+
+    this.catchAsync(fn, req, res, next);
   }
 
-  async patchTours (req, res) {
-    try {
+  patchTours (req, res, next) {
+    const fn = async (req, res, next) => {
       const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-      
+        
+      if (!tour) { return next(new AppError('Tour doesn\'t exist', 404)); }
+
       return res.status(201)
                 .json({
                   status: 'updated',
@@ -71,18 +73,16 @@ class TourController extends Controller{
                     tour: tour
                   }
                 });
-    } catch (error) {
-      return res.status(500)
-                .json({
-                  status: 'fail',
-                  message: error
-                });
-    }  
+    };
+    
+    this.catchAsync(fn, req, res, next);
   }
 
-  async deleteTours(req, res) {
-    try {
-      const tour = await Tour.findByIdAndDelete(req.params.id)
+  deleteTours(req, res, next) {
+    const fn = async (req, res, next) => {
+      const tour = await Tour.findByIdAndDelete(req.params.id);
+  
+      if (!tour) { return next(new AppError('Tour doesn\'t exist', 404)); }
   
       return res.status(204)
                 .json({
@@ -91,17 +91,13 @@ class TourController extends Controller{
                     tour: tour
                   }
                 });
-    } catch (error) {
-      return res.status(500)
-                .json({
-                  status: 'fail',
-                  message: error
-                });
-    }
+    };
+
+    this.catchAsync(fn, req, res, next);
   }
 
-  async getTourStats(req, res) {
-    try {
+  getTourStats(req, res, next) {
+    const fn = async (req, res, next) => {
       const agg = [
         {
           $match: { ratingAverage: { $gte: 4.7 } }
@@ -134,18 +130,13 @@ class TourController extends Controller{
                       tours: tours
                     }
                   });
-    } catch (error) {
-      
-      return res.status(500)
-                .json({
-                  status: 'fail',
-                  message: error
-                });
-    }
+    };
+
+    this.catchAsync(fn, req, res, next);
   }
 
-  async getMonthlyPlan(req, res) {
-    try {
+  getMonthlyPlan(req, res, next) {
+    const fn = async (req, res, next) => {
       const agg = [
         {
           $unwind: '$startDates'
@@ -205,14 +196,9 @@ class TourController extends Controller{
                       plans: plans
                     }
                   });
-    } catch (error) {
-      console.log(error);
-      return res.status(500)
-                .json({
-                  status: 'fail',
-                  message: error
-                });
-    }
+    };
+    
+    this.catchAsync(fn, req, res, next);
   }
 }
 
