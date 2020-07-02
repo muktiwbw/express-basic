@@ -36,6 +36,9 @@ class AuthMiddleware extends Middleware {
       if (!user.tokenIssuedAfterLastPasswordChange(payload.iat, user.passwordUpdatedAt)) {
         return next(new AppError('You just changed your password recently. Please re-login.', 401));
       }
+
+      // 5. Assign user to request so that the next middleware doesn't have to query
+      req.user = user;
   
       next();
     }
