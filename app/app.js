@@ -4,7 +4,10 @@ const logger = require('./utils/logger');
 const { AppError, GlobalError } = require('./utils/errorHandler');
 
 const TourRouter = require('./routes/tourRouter');
-// const userRouter = require('./routes/userRoute');
+const userRouter = require('./routes/userRouter');
+const AuthRouter = require('./routes/authRouter');
+
+const AuthMiddleware = require('./middlewares/authMiddleware');
 
 class Application {
   constructor() {
@@ -20,8 +23,15 @@ class Application {
     this.app.use(logger.badResponse);
 
     /**Routes */
+    // * Auth Router
+    this.app.use(`${this.routePrefix}/auth`, AuthRouter);
+
+    // * Auth Middleware
+    this.app.use(AuthMiddleware.tokenVerification.bind(AuthMiddleware));
+
+    // * Protected Routes
     this.app.use(`${this.routePrefix}/tours`, TourRouter);
-    // this.app.use(`${this.routePrefix}/users`, userRouter);
+    this.app.use(`${this.routePrefix}/users`, userRouter);
 
     /**
      * * 404 route handler

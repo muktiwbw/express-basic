@@ -5,13 +5,13 @@ class UserRouter extends Router {
     constructor() {
         super();
 
-        this.router.route('/')
-            .post(userController.createUsers);
+        // this.router.route('/')
+        //     .post(userController.createUsers);
         
-        this.router.route('/:id?')
-            .get(userController.getUsers)
-            .patch(userController.patchUsers)
-            .delete(userController.deleteUsers);
+        // this.router.route('/:id?')
+        //     .get(userController.getUsers)
+        //     .patch(userController.patchUsers)
+        //     .delete(userController.deleteUsers);
     }
 }
     
