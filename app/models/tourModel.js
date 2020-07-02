@@ -10,7 +10,7 @@ class Tour extends Database{
       name: {
         type: String,
         required: [true, 'Missing name field'],
-        unique: [true, 'Conflicting name with existed data'],
+        unique: true,
         trim: true,
         validate: {
           validator: function(v) {
