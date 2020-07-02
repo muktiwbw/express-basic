@@ -7,6 +7,8 @@ class Environment {
 
     this.dbUri = this.loadDbUri();
     this.appPort = process.env.APP_PORT || 3000;
+    this.appSecret = process.env.APP_SECRET;
+    this.jwtExpiresIn = process.env.JWT_EXPIRES_IN;
   }
 
   loadConfig() {
