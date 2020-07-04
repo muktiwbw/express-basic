@@ -24,6 +24,11 @@ class User extends Database {
           message: 'Email address is not valid'
         }
       },
+      role: {
+        type: String,
+        required: [true, 'Missing role field'],
+        enum: ['admin', 'lead-guide', 'guide', 'user']
+      },
       photo: {
         type: String,
         required: [true, 'Missing photo field'],

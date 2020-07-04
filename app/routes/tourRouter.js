@@ -1,6 +1,7 @@
 const Router = require('./../config/router');
 const TourController = require('../controllers/tourController');
 const TourMiddleware = require('../middlewares/tourMiddleware');
+const AuthMiddleware = require('../middlewares/authMiddleware');
 
 class TourRouter extends Router {
   constructor() {
@@ -42,7 +43,10 @@ class TourRouter extends Router {
     this.router.route('/:id?')
         .get(TourMiddleware.querySeparator.bind(TourMiddleware), TourController.getTours.bind(TourController))
         .patch(TourController.patchTours.bind(TourController))
-        .delete(TourController.deleteTours.bind(TourController));
+        .delete(
+            AuthMiddleware.restrictedTo('admin', 'lead-guide').bind(AuthMiddleware), 
+            TourController.deleteTours.bind(TourController)
+        );
     
   }
 }

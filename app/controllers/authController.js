@@ -4,6 +4,7 @@ const User = require('./../models/userModel');
 const { AppError } = require('../utils/errorHandler');
 const env = require('./../config/env');
 const jwt = require('jsonwebtoken');
+const { promisify } = require('util');
 
 class AuthController extends Controller {
   constructor() {
@@ -15,6 +16,7 @@ class AuthController extends Controller {
       const body = {
         name: req.body.name,
         email: req.body.email,
+        role: req.body.role,
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm,
       };
@@ -31,6 +33,7 @@ class AuthController extends Controller {
                   user: { 
                     name: user.name, 
                     email: user.email, 
+                    role: user.role,
                     createdAt: user.createdAt 
                   }
                 }
@@ -70,6 +73,34 @@ class AuthController extends Controller {
     };
 
     this.catchAsync(fn, req, res, next);
+  }
+
+  forgotPassword(req, res, next) {
+    const fn = async (req, res, next) => {
+      // Check if email is provided
+      if (!req.body.email) return next(new AppError('Missing email field'));
+  
+      // Check if user exists
+      const user = await User.findOne({ email: req.body.email });
+
+      if (!user) return next(new AppError(`User with email address ${req.body.email} doesn't exist`));
+  
+      // Generate token with short expiration time
+      const token = jwt.sign({ _id: user._id }, env.appSecret, { expiresIn: env.jwtResetPasswordExpiresIn });
+  
+      // Returns
+      return res
+              .status(200)
+              .json({
+                status: 'success',
+                message: 'Password reset email has been sent'
+              });
+    }
+
+    this.catchAsync(fn, req, res, next);
+  }
+  resetPassword(req, res, next) {
+
   }
 }
 
