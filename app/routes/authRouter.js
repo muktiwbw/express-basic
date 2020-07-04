@@ -9,6 +9,11 @@ class AuthRouter extends Router {
             .post(AuthController.register.bind(AuthController));
         this.router.route('/login')
             .post(AuthController.login.bind(AuthController));
+            
+        this.router.route('/forgotPassword')
+            .post(AuthController.forgotPassword.bind(AuthController));
+        this.router.route('/resetPassword')
+            .post(AuthController.resetPassword.bind(AuthController));
     }
 }
     

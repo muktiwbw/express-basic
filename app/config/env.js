@@ -9,6 +9,7 @@ class Environment {
     this.appPort = process.env.APP_PORT || 3000;
     this.appSecret = process.env.APP_SECRET;
     this.jwtExpiresIn = process.env.JWT_EXPIRES_IN;
+    this.jwtResetPasswordExpiresIn = process.env.JWT_RESET_PASSWORD_EXPIRES_IN;
   }
 
   loadConfig() {
