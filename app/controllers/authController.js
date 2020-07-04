@@ -60,7 +60,17 @@ class AuthController extends Controller {
       }
 
       // * Generate JWT
-      const token = jwt.sign({ _id: user.id }, env.appSecret, { expiresIn: env.jwtExpiresIn })
+      const token = jwt.sign({ _id: user._id }, env.appSecret, { expiresIn: env.jwtExpiresIn })
+
+      // * Cookies (will move it to utils later)
+      const cookieOption = {
+        expires: new Date(Date.now() + env.jwtCookieExpiresIn * 24 * 60 * 60 *1000),
+        httpOnly: true
+      };
+
+      if (env.appEnv === 'production') cookieOption.secure = true;
+
+      res.cookie('jwt', token, cookieOption);
 
       // * Return token
       return res
@@ -124,10 +134,11 @@ class AuthController extends Controller {
 
       if (!user) return next(new AppError('User with current id not found', 404));
 
+      // * Also update the passwordConfirm to run the validation
+      // * Use save() to run validation and also run the pre middleware
       user.password = req.body.password;
-      user.passwordUpdatedAt = Date.now();
-      
-      if (!user.save()) return next(new AppError('There\'s a problem updating your password', 500));
+      user.passwordConfirm = req.body.passwordConfirm;
+      await user.save();
 
       // * Return
       return res

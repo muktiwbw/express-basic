@@ -1,17 +1,20 @@
 const Router = require('./../config/router');
-const userController = require('../controllers/userController');
+const UserController = require('../controllers/userController');
+const AuthMiddleware = require('../middlewares/authMiddleware');
 
 class UserRouter extends Router {
     constructor() {
         super();
 
-        // this.router.route('/')
-        //     .post(userController.createUsers);
-        
-        // this.router.route('/:id?')
-        //     .get(userController.getUsers)
-        //     .patch(userController.patchUsers)
-        //     .delete(userController.deleteUsers);
+        this.router.route('/updatePassword')
+            .patch(UserController.updatePassword.bind(UserController));
+        this.router.route('/updateInfo/:id')
+            .patch(
+                AuthMiddleware.selfModification.bind(AuthMiddleware),
+                UserController.updateInfo.bind(UserController)
+            );
+        this.router.route('/deleteSelf')
+            .delete(UserController.deleteSelf.bind(UserController));
     }
 }
     

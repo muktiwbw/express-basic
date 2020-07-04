@@ -55,6 +55,14 @@ class AuthMiddleware extends Middleware {
       next();
     }
   }
+
+  selfModification(req, res, next) {
+    if (req.params.id.toString().trim() !== req.user._id.toString().trim()) {
+      return next(new AppError('You can\'t modify other\'s data', 401));
+    }
+
+    next();
+  }
 }
 
 module.exports = new AuthMiddleware();

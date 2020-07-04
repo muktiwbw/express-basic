@@ -16,6 +16,7 @@ class Environment {
 
     this.jwtExpiresIn = process.env.JWT_EXPIRES_IN;
     this.jwtResetPasswordExpiresIn = process.env.JWT_RESET_PASSWORD_EXPIRES_IN;
+    this.jwtCookieExpiresIn = process.env.JWT_COOKIE_EXPIRES_IN;
   }
 
   loadConfig() {

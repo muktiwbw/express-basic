@@ -1,6 +1,7 @@
 const Database = require('./../config/database');
 const { default: validator } = require('validator');
 const bcrypt = require('bcrypt');
+const { AppError } = require('../utils/errorHandler');
 
 class User extends Database {
   constructor() {
@@ -27,7 +28,8 @@ class User extends Database {
       role: {
         type: String,
         required: [true, 'Missing role field'],
-        enum: ['admin', 'lead-guide', 'guide', 'user']
+        enum: ['admin', 'lead-guide', 'guide', 'user'],
+        default: 'user'
       },
       photo: {
         type: String,
@@ -60,11 +62,22 @@ class User extends Database {
         type: Date,
         default: Date.now(),
         select: false
+      },
+      active: {
+        type: Boolean,
+        default: true,
+        select: false
       }
     }, {
       toJSON: { virtuals: true },
       toObject: { virtuals: true }
     });
+
+    this.schema.pre(/^find/, function(next) {
+      this.find({ active: true });
+
+      next();
+    })
 
     this.schema.pre('save', async function(next) {
       if (this.isModified('password')) {
@@ -75,8 +88,10 @@ class User extends Database {
          * * Assign passwordConfirm to undefined to delete this field in database.
          * * Tried using null but it just appear as null instead of removed.
          */
+         
         this.password = await bcrypt.hash(this.password, 10).catch(next);
         this.passwordConfirm = undefined;
+        this.passwordUpdatedAt = Date.now();
       }
 
       next();

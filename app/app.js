@@ -2,6 +2,11 @@ const express = require('express');
 
 const logger = require('./utils/logger');
 const { AppError, GlobalError } = require('./utils/errorHandler');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const mongoSanitize - require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const TourRouter = require('./routes/tourRouter');
 const userRouter = require('./routes/userRouter');
@@ -11,13 +16,25 @@ const AuthMiddleware = require('./middlewares/authMiddleware');
 
 class Application {
   constructor() {
+    this.app.use(helmet());
+    
     this.routePrefix = '/api/v1';
+    this.limiter = rateLimit({
+      max: 50,
+      windowMs: 5 * 60 * 1000
+    });
 
     this.app = express();
 
     /**Express extensions */
-    this.app.use(express.json());
+    this.app.use(express.json({ limit: '10kb' }));
+
+    this.app.use(mongoSanitize());
+    this.app.use(xss());
+    this.app.use(hpp());
+
     this.app.use(express.static(`${__dirname}/public`));
+    this.app.use(this.limiter);
 
     /**Logger */
     this.app.use(logger.badResponse);
