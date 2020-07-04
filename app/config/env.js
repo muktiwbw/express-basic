@@ -8,6 +8,12 @@ class Environment {
     this.dbUri = this.loadDbUri();
     this.appPort = process.env.APP_PORT || 3000;
     this.appSecret = process.env.APP_SECRET;
+
+    this.mailHost = process.env.MAIL_HOST;
+    this.mailPort = process.env.MAIL_PORT;
+    this.mailUsername = process.env.MAIL_USERNAME;
+    this.mailPassword = process.env.MAIL_PASSWORD;
+
     this.jwtExpiresIn = process.env.JWT_EXPIRES_IN;
     this.jwtResetPasswordExpiresIn = process.env.JWT_RESET_PASSWORD_EXPIRES_IN;
   }

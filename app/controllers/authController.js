@@ -5,6 +5,7 @@ const { AppError } = require('../utils/errorHandler');
 const env = require('./../config/env');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
+const Mailer = require('./../utils/mailer');
 
 class AuthController extends Controller {
   constructor() {
@@ -88,6 +89,16 @@ class AuthController extends Controller {
       // Generate token with short expiration time
       const token = jwt.sign({ _id: user._id }, env.appSecret, { expiresIn: env.jwtResetPasswordExpiresIn });
   
+      // Send mail containing reset token
+      const mailer = new Mailer();
+
+      await mailer.setSender({
+        from: 'reset@natours.com',
+        to: user.email,
+        subject: 'Reset Password',
+        text: `Send a PATCH request to http://localhost:3000/auth/resetPassword/${token}`
+      }).send();
+
       // Returns
       return res
               .status(200)
@@ -99,8 +110,43 @@ class AuthController extends Controller {
 
     this.catchAsync(fn, req, res, next);
   }
-  resetPassword(req, res, next) {
 
+  resetPassword(req, res, next) {
+    const fn = async (req, res, next) => {
+      // * Verify token
+      const payload = await promisify(jwt.verify)(req.params.token, env.appSecret);
+
+      // * Check if token is not yet expired
+      // * * No need. Apparently the API handled this as well.
+
+      // * Update password and token last updated at
+      const user = await User.findById(payload._id);
+
+      if (!user) return next(new AppError('User with current id not found', 404));
+
+      user.password = req.body.password;
+      user.passwordUpdatedAt = Date.now();
+      
+      if (!user.save()) return next(new AppError('There\'s a problem updating your password', 500));
+
+      // * Return
+      return res
+              .status(201)
+              .json({
+                status: 'updated',
+                data: {
+                  user: {
+                    name: user.name, 
+                    email: user.email, 
+                    role: user.role,
+                    createdAt: user.createdAt 
+                  }
+                }
+              });
+
+    };
+
+    this.catchAsync(fn, req, res, next);
   }
 }
 

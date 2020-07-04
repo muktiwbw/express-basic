@@ -12,8 +12,8 @@ class AuthRouter extends Router {
             
         this.router.route('/forgotPassword')
             .post(AuthController.forgotPassword.bind(AuthController));
-        this.router.route('/resetPassword')
-            .post(AuthController.resetPassword.bind(AuthController));
+        this.router.route('/resetPassword/:token')
+            .patch(AuthController.resetPassword.bind(AuthController));
     }
 }
     
