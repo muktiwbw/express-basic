@@ -5,16 +5,21 @@ const AuthMiddleware = require('../middlewares/authMiddleware');
 class UserRouter extends Router {
     constructor() {
         super();
-
+        
+        this.router.route('/getMe')
+            .get(UserController.getMe.bind(UserController));
+        this.router.route('/updateMe')
+            .patch(UserController.updateMe.bind(UserController));
+        this.router.route('/deleteMe')
+            .delete(UserController.deleteMe.bind(UserController));
+            
         this.router.route('/updatePassword')
             .patch(UserController.updatePassword.bind(UserController));
-        this.router.route('/updateInfo/:id')
-            .patch(
-                AuthMiddleware.selfModification.bind(AuthMiddleware),
-                UserController.updateInfo.bind(UserController)
-            );
-        this.router.route('/deleteSelf')
-            .delete(UserController.deleteSelf.bind(UserController));
+
+        this.router.route('/')
+            .get(UserController.getAllUsers.bind(UserController));
+        this.router.route('/:id')
+            .get(UserController.getOneUser.bind(UserController));
     }
 }
     

@@ -9,6 +9,14 @@ class UserController extends Controller {
     super();
   }
 
+  getAllUsers(req, res, next) {
+    this.getAll(User, req, res, next);
+  }
+
+  getOneUser(req, res, next) {
+    this.getOne(User, req, res, next);
+  }
+
   updatePassword(req, res, next) {
     const fn = async (req, res, next) => {
       // * 1. Get user
@@ -57,55 +65,25 @@ class UserController extends Controller {
     this.catchAsync(fn, req, res, next);
   }
 
-  updateInfo(req, res, next) {
-    const fn = async (req, res, next) => {
-      // * 1. Filter only allowed field to be updated
-      const filteredBody = this.filterBody(req.body, ['name', 'email']);
-  
-      // * 2. Update info
-      const user = await User.findByIdAndUpdate(req.params.id, filteredBody, { runValidators: true, new: true });
-      
-      // * 3. Return
-      return res
-              .status(201)
-              .json({
-                status: 'updated',
-                message: 'Your info has been updated',
-                data: {
-                  user: {
-                    name: user.name, 
-                    email: user.email, 
-                    role: user.role,
-                    createdAt: user.createdAt 
-                  }
-                }
-              });
-    };
-  
-    this.catchAsync(fn, req, res, next);
+  getMe(req, res, next) {
+    req.params.id = req.user._id;
+    
+    this.getOne(User, req, res, next);
   }
 
-  deleteSelf(req, res, next) {
-    const fn = async (req, res, next) => {
-      const user = await User.findByIdAndUpdate(req.user._id, { active: false });
+  updateMe(req, res, next) {
+    // * Filter only allowed field to be updated
+    req.body = this.filterBody(req.body, ['name', 'email']);
+    req.params.id = req.user._id;
 
-      return res
-              .status(204)
-              .json({
-                status: 'deleted',
-                message: 'User has been deleted',
-                data: {
-                  user: {
-                    name: user.name, 
-                    email: user.email, 
-                    role: user.role,
-                    createdAt: user.createdAt 
-                  }
-                }
-              });
-    };
+    this.updateOne(User, req, res, next);
+  }
 
-    this.catchAsync(fn, req, res, next);
+  deleteMe(req, res, next) {
+    req.params.id = req.user._id;
+    req.body = { active: false };
+
+    this.updateOne(User, req, res, next);
   }
 }
 

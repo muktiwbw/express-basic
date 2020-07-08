@@ -1,7 +1,6 @@
 const Database = require('./../config/database');
 const { default: validator } = require('validator');
 const bcrypt = require('bcrypt');
-const { AppError } = require('../utils/errorHandler');
 
 class User extends Database {
   constructor() {
@@ -73,11 +72,11 @@ class User extends Database {
       toObject: { virtuals: true }
     });
 
-    this.schema.pre(/^find/, function(next) {
-      this.find({ active: true });
+    // this.schema.pre(/^find/, function(next) {
+    //   this.find({ active: true }).select('-__v -role');
 
-      next();
-    })
+    //   next();
+    // })
 
     this.schema.pre('save', async function(next) {
       if (this.isModified('password')) {

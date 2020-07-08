@@ -4,7 +4,7 @@ const logger = require('./utils/logger');
 const { AppError, GlobalError } = require('./utils/errorHandler');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-const mongoSanitize - require('express-mongo-sanitize');
+const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 
@@ -13,11 +13,10 @@ const userRouter = require('./routes/userRouter');
 const AuthRouter = require('./routes/authRouter');
 
 const AuthMiddleware = require('./middlewares/authMiddleware');
+const reviewRouter = require('./routes/reviewRouter');
 
 class Application {
   constructor() {
-    this.app.use(helmet());
-    
     this.routePrefix = '/api/v1';
     this.limiter = rateLimit({
       max: 50,
@@ -25,6 +24,8 @@ class Application {
     });
 
     this.app = express();
+    
+    this.app.use(helmet());
 
     /**Express extensions */
     this.app.use(express.json({ limit: '10kb' }));
@@ -49,6 +50,7 @@ class Application {
     // * Protected Routes
     this.app.use(`${this.routePrefix}/tours`, TourRouter);
     this.app.use(`${this.routePrefix}/users`, userRouter);
+    this.app.use(`${this.routePrefix}/reviews`, reviewRouter);
 
     /**
      * * 404 route handler

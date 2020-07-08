@@ -78,7 +78,36 @@ class Tour extends Database{
       },
       startDates: {
         type: [Date]
-      }
+      },
+      startLocation: {
+        type: {
+          type: String,
+          default: "Point",
+          enum: ["Point"]
+        },
+        coordinates: [Number],
+        address: String,
+        description: String
+      },
+      locations: [
+        {
+          type: {
+            type: String,
+            default: "Point",
+            enum: ["Point"]
+          },
+          coordinates: [Number],
+          address: String,
+          description: String,
+          day: Number
+        }
+      ],
+      guides: [
+        {
+          type: this.mongoose.Schema.ObjectId,
+          ref: 'User'
+        }
+      ]
     }, {
       toJSON: { virtuals: true },
       toObject: { virtuals: true }
@@ -96,7 +125,11 @@ class Tour extends Database{
      * Query Middleware
      * Triggered by: count, /^delete/, /^find/, /^update/, remove
      */
-    this.schema.pre(/^find/, function(next) { this.find({ secret: false }); next(); });
+    // this.schema.pre(/^find/, function(next) { 
+    //   this.find({ secret: false }).populate({ path: 'guides' }); 
+      
+    //   next(); 
+    // });
 
     /**
      * Aggregate Middleware
@@ -123,6 +156,13 @@ class Tour extends Database{
      *  the outer scope's "this" to it.
      */
     this.schema.virtual('durationWeek').get(function() { return Math.ceil(this.duration / 7) });
+
+    // * A little different than a usual virtual field declaration
+    this.schema.virtual('reviews', {
+      ref: 'Review',
+      foreignField: 'tour',
+      localField: '_id'
+    });
 
     this.model = this.mongoose.model('Tour', this.schema, 'tours');
   }

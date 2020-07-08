@@ -1,8 +1,6 @@
 const Controller = require('../config/controller');
 const Tour = require('./../models/tourModel');
 
-const { AppError } = require('./../utils/errorHandler');
-
 class TourController extends Controller{
   constructor() {
     super();
@@ -13,87 +11,24 @@ class TourController extends Controller{
    * * So that it any async rejection can be caught
    */
 
-  getTours(req, res, next) {
-    const fn = async (req, res, next) => {
-      if (!req.params.id) {
-        const tours = await this.displayByQueryString(Tour, req.filterQuery, req.extraQuery);
+  getAllTours(req, res, next) {
+    this.getAll(Tour, req, res, next);
+  }
 
-        return res.status(200)
-                  .json({
-                    status: 'success',
-                    result: tours.length,
-                    data: {
-                      tours: tours
-                    }
-                  });
-      } else {
-        const tour = await Tour.findById(req.params.id);
-
-        if (!tour) { return next(new AppError('Tour doesn\'t exist', 404)); }
-
-        return res.status(200)
-                  .json({
-                    status: 'success',
-                    data: {
-                      tour: tour
-                    }
-                  });
-      }
-    };
-
-    this.catchAsync(fn, req, res, next);
+  getOneTour(req, res, next) {
+    this.getOne(Tour, req, res, next);
   }
 
   createTours(req, res, next) {
-    const fn = async (req, res, next) => {
-      const tour = await Tour.create(req.body);
-    
-      return res.status(201)
-                .json({
-                  status: 'created',
-                  data: {
-                    tour: tour
-                  }
-                });
-    };
-
-    this.catchAsync(fn, req, res, next);
+    this.createOne(Tour, req, res, next);
   }
 
-  patchTours (req, res, next) {
-    const fn = async (req, res, next) => {
-      const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-        
-      if (!tour) { return next(new AppError('Tour doesn\'t exist', 404)); }
-
-      return res.status(201)
-                .json({
-                  status: 'updated',
-                  data: {
-                    tour: tour
-                  }
-                });
-    };
-    
-    this.catchAsync(fn, req, res, next);
+  patchTours(req, res, next) {
+    this.updateOne(Tour, req, res, next);
   }
 
   deleteTours(req, res, next) {
-    const fn = async (req, res, next) => {
-      const tour = await Tour.findByIdAndDelete(req.params.id);
-  
-      if (!tour) { return next(new AppError('Tour doesn\'t exist', 404)); }
-  
-      return res.status(204)
-                .json({
-                  status: 'deleted',
-                  data: {
-                    tour: tour
-                  }
-                });
-    };
-
-    this.catchAsync(fn, req, res, next);
+    this.deleteOne(Tour, req, res, next);
   }
 
   getTourStats(req, res, next) {

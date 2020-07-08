@@ -2,6 +2,7 @@ const Router = require('./../config/router');
 const TourController = require('../controllers/tourController');
 const TourMiddleware = require('../middlewares/tourMiddleware');
 const AuthMiddleware = require('../middlewares/authMiddleware');
+const reviewRouter = require('./reviewRouter');
 
 class TourRouter extends Router {
   constructor() {
@@ -22,7 +23,7 @@ class TourRouter extends Router {
         .get(
             TourMiddleware.topThreeToursByRating.bind(TourMiddleware),
             TourMiddleware.querySeparator.bind(TourMiddleware),
-            TourController.getTours.bind(TourController)
+            TourController.getAllTours.bind(TourController)
         );
 
     this.router.route('/stats')
@@ -36,12 +37,15 @@ class TourRouter extends Router {
      * COMMONLY USED ENDPOINTS
      * ==================================================================
     */
+
+    this.router.use('/:tourId/reviews', reviewRouter);
     
     this.router.route('/')
-        .post(TourController.createTours.bind(TourController));
+        .post(TourController.createTours.bind(TourController))
+        .get(TourController.getAllTours.bind(TourController));
     
-    this.router.route('/:id?')
-        .get(TourMiddleware.querySeparator.bind(TourMiddleware), TourController.getTours.bind(TourController))
+    this.router.route('/:id')
+        .get(TourController.getOneTour.bind(TourController))
         .patch(TourController.patchTours.bind(TourController))
         .delete(
             AuthMiddleware.restrictedTo('admin', 'lead-guide').bind(AuthMiddleware), 

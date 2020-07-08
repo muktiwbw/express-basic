@@ -13,35 +13,9 @@ class AuthController extends Controller {
   }
 
   register(req, res, next) {
-    const fn = async (req, res, next) => {
-      const body = {
-        name: req.body.name,
-        email: req.body.email,
-        role: req.body.role,
-        password: req.body.password,
-        passwordConfirm: req.body.passwordConfirm,
-      };
+    req.body = this.filterBody(req.body, ['name', 'email', 'role', 'password', 'passwordConfirm']);
 
-      const user = await User.create(body);
-
-      if (!user) return next(new AppError('Unable to create user account', 500));
-
-      return res
-              .status(201)
-              .json({
-                status: 'created',
-                data: {
-                  user: { 
-                    name: user.name, 
-                    email: user.email, 
-                    role: user.role,
-                    createdAt: user.createdAt 
-                  }
-                }
-              });
-    };
-
-    this.catchAsync(fn, req, res, next);
+    this.createOne(User, req, res, next);
   }
 
   login(req, res, next) {
@@ -52,7 +26,7 @@ class AuthController extends Controller {
       if (!email || !password) return next(new AppError('Missing email or password field', 400));
 
       // * Check if user exists
-      const user = await User.findOne({ email }).select('+password');
+      const user = await User.findOne({ email, active: true }).select('+password');
       
       // * Check if password matches
       if (!user || !(await user.passwordMatch(password, user.password))) {

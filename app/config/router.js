@@ -1,8 +1,8 @@
 const express = require('express');
 
 class Router {
-  constructor() {
-    this.router = express.Router();
+  constructor(options = {}) {
+    this.router = express.Router(options);
   }
 }
 
